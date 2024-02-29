@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Wei Liu" />
+
+<meta name="date" content="2024-02-28" />
+
+<title>COAP: simulation</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">COAP: simulation</h1>
+<h4 class="author">Wei Liu</h4>
+<h4 class="date">2024-02-28</h4>
+
+
+
+<p>This vignette introduces the usage of COAP for the analysis of high-dimensional count data with additional high-dimensional covariates, by comparison with other methods.</p>
+<p>The package can be loaded with the command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(COAP)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(GFM)</a></code></pre></div>
+<div id="generate-the-simulated-data" class="section level2">
+<h2>Generate the simulated data</h2>
+<p>First, we generate the data simulated data.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">n &lt;-<span class="st"> </span><span class="dv">200</span>; p &lt;-<span class="st"> </span><span class="dv">200</span>; </a>
+<a class="sourceLine" id="cb2-2" title="2">d=<span class="st"> </span><span class="dv">50</span></a>
+<a class="sourceLine" id="cb2-3" title="3">rank0 &lt;-<span class="st"> </span><span class="dv">6</span>;</a>
+<a class="sourceLine" id="cb2-4" title="4">q =<span class="st"> </span><span class="dv">5</span>;</a>
+<a class="sourceLine" id="cb2-5" title="5">datList &lt;-<span class="st"> </span><span class="kw">gendata_simu</span>(<span class="dt">seed =</span> <span class="dv">1</span>, <span class="dt">n=</span>n, <span class="dt">p=</span>p, <span class="dt">d=</span> d, <span class="dt">rank0 =</span> rank0, <span class="dt">q=</span> q, <span class="dt">rho=</span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb2-6" title="6">                        <span class="dt">sigma2_eps =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-7" title="7">X_count &lt;-<span class="st"> </span>datList<span class="op">$</span>X; Z &lt;-<span class="st"> </span>datList<span class="op">$</span>Z</a>
+<a class="sourceLine" id="cb2-8" title="8">H0 &lt;-<span class="st"> </span>datList<span class="op">$</span>H0; B0 &lt;-<span class="st"> </span>datList<span class="op">$</span>B0</a>
+<a class="sourceLine" id="cb2-9" title="9">bbeta0 &lt;-<span class="st"> </span><span class="kw">cbind</span>( datList<span class="op">$</span>mu0, datList<span class="op">$</span>bbeta0)</a></code></pre></div>
+<p>Fit the COAP model using the function <code>RR_COAP()</code> in the R package <code>COAP</code>. Users can use <code>?RR_COAP</code> to see the details about this function</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">hq &lt;-<span class="st"> </span><span class="dv">5</span>; hr &lt;-<span class="st"> </span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb3-3" title="3">  tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb3-4" title="4">  reslist &lt;-<span class="st"> </span><span class="kw">RR_COAP</span>(X_count, <span class="dt">Z=</span> Z, <span class="dt">q=</span>hq, <span class="dt">rank_use=</span> hr, <span class="dt">epsELBO =</span> <span class="fl">1e-6</span>)</a>
+<a class="sourceLine" id="cb3-5" title="5">  toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb3-6" title="6">  time_coap &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb3-7" title="7">})</a></code></pre></div>
+<p>Check the increased property of the envidence lower bound function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb4-2" title="2">dat_iter &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">iter=</span><span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(reslist<span class="op">$</span>ELBO_seq), <span class="dt">ELBO=</span>reslist<span class="op">$</span>ELBO_seq)</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">ggplot</span>(<span class="dt">data=</span>dat_iter, <span class="kw">aes</span>(<span class="dt">x=</span>iter, <span class="dt">y=</span>ELBO)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">20</span>)</a></code></pre></div>
+<p>We calculate the metrics to measure the estimatioin accuracy, where the trace statistic is used to measure the estimation accuracy of loading matrix and prediction accuracy of factor matrix, which is evaluated by the function <code>measurefun()</code> in the R package <code>GFM</code>, and the root of mean square error is adopted to measure the estimation error of bbeta.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">library</span>(GFM)</a>
+<a class="sourceLine" id="cb5-2" title="2">metricList &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb5-3" title="3">metricList<span class="op">$</span>COAP &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb5-4" title="4">metricList<span class="op">$</span>COAP<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(reslist<span class="op">$</span>H, H0)</a>
+<a class="sourceLine" id="cb5-5" title="5">metricList<span class="op">$</span>COAP<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(reslist<span class="op">$</span>B, B0)</a>
+<a class="sourceLine" id="cb5-6" title="6"></a>
+<a class="sourceLine" id="cb5-7" title="7">norm_vec &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">sqrt</span>(<span class="kw">sum</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x)))</a>
+<a class="sourceLine" id="cb5-8" title="8">metricList<span class="op">$</span>COAP<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(reslist<span class="op">$</span>bbeta<span class="op">-</span>bbeta0)</a>
+<a class="sourceLine" id="cb5-9" title="9">metricList<span class="op">$</span>COAP<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(reslist<span class="op">$</span>bbeta[,<span class="dv">1</span>]<span class="op">-</span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb5-10" title="10">metricList<span class="op">$</span>COAP<span class="op">$</span>Time &lt;-<span class="st"> </span>time_coap</a></code></pre></div>
+</div>
+<div id="compare-with-other-methods" class="section level2">
+<h2>Compare with other methods</h2>
+<p>We compare COAP with various prominent methods in the literature. They are (1) High-dimensional LFM (Bai and Ng 2002) implemented in the R package GFM; (2) PoissonPCA (Kenney et al. 2021) implemented in the R package PoissonPCA; (3) Zero-inflated Poisson factor model (ZIPFA, Xu et al. 2021) implemented in the R package ZIPFA; (4) Generalized factor model (Liu et al. 2023) implemented in the R package GFM; (5) PLNPCA (Chiquet et al. 2018) implemented in the R package PLNmodels; (6) Generalized Linear Latent Variable Models (GLLVM, Hui et al. 2017) implemented in the R package gllvm. (7) Poisson regression model for each <span class="math inline">\(x_{ij}, (j = 1,··· ,p)\)</span>, implemented in stats R package; (8) Multi-response reduced-rank Poisson regression model (MMMR, Luo et al. 2018) implemented in rrpack R package.</p>
+<p>(1). First, we implemented the linear factor model (LFM) and record the metrics that measure the estimation accuracy and computational cost.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">metricList<span class="op">$</span>LFM &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb6-2" title="2">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb6-3" title="3">fit_lfm &lt;-<span class="st"> </span><span class="kw">Factorm</span>(X_count, <span class="dt">q=</span>q)</a>
+<a class="sourceLine" id="cb6-4" title="4">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb6-5" title="5">time_lfm &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb6-6" title="6"></a>
+<a class="sourceLine" id="cb6-7" title="7">hbb1 &lt;-<span class="st"> </span><span class="kw">colMeans</span>(X_count)</a>
+<a class="sourceLine" id="cb6-8" title="8">metricList<span class="op">$</span>LFM<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_lfm<span class="op">$</span>hH, H0)</a>
+<a class="sourceLine" id="cb6-9" title="9">metricList<span class="op">$</span>LFM<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_lfm<span class="op">$</span>hB, B0)</a>
+<a class="sourceLine" id="cb6-10" title="10">metricList<span class="op">$</span>LFM<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(hbb1<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb6-11" title="11">metricList<span class="op">$</span>LFM<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb6-12" title="12">metricList<span class="op">$</span>LFM<span class="op">$</span>Time &lt;-<span class="st"> </span>time_lfm</a></code></pre></div>
+<p>(2). Then, we implemented PoissonPCA and recorded the metrics.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">metricList<span class="op">$</span>PoissonPCA &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">library</span>(PoissonPCA)</a>
+<a class="sourceLine" id="cb7-3" title="3">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb7-4" title="4">fit_poispca &lt;-<span class="st"> </span><span class="kw">Poisson_Corrected_PCA</span>(X_count, <span class="dt">k=</span> hq) </a>
+<a class="sourceLine" id="cb7-5" title="5">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb7-6" title="6">time_ppca &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb7-7" title="7"></a>
+<a class="sourceLine" id="cb7-8" title="8">hbb1 &lt;-<span class="st"> </span><span class="kw">colMeans</span>(X_count)</a>
+<a class="sourceLine" id="cb7-9" title="9">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_poispca<span class="op">$</span>scores, H0)</a>
+<a class="sourceLine" id="cb7-10" title="10">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_poispca<span class="op">$</span>loadings, B0)</a>
+<a class="sourceLine" id="cb7-11" title="11">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">log</span>(<span class="dv">1</span><span class="op">+</span>fit_poispca<span class="op">$</span>center)<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb7-12" title="12">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb7-13" title="13">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>Time &lt;-<span class="st"> </span>time_ppca</a></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Thirdly, we implemented the zero-inflated Poisson factor model:</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## ZIPFA runs very slowly, so we do not run it here.</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">library</span>(ZIPFA)</a>
+<a class="sourceLine" id="cb8-3" title="3">metricList<span class="op">$</span>ZIPFA &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb8-5" title="5">  tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb8-6" title="6">  fit_zipfa &lt;-<span class="st"> </span><span class="kw">ZIPFA</span>(X_count, <span class="dt">k=</span>hq, <span class="dt">display =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-7" title="7">  toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb8-8" title="8">  time_zipfa &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb8-9" title="9">)</a>
+<a class="sourceLine" id="cb8-10" title="10"></a>
+<a class="sourceLine" id="cb8-11" title="11"></a>
+<a class="sourceLine" id="cb8-12" title="12">  </a>
+<a class="sourceLine" id="cb8-13" title="13">idx_max_like &lt;-<span class="st"> </span><span class="kw">which.max</span>(fit_zipfa<span class="op">$</span>Likelihood) </a>
+<a class="sourceLine" id="cb8-14" title="14">hbb1 &lt;-<span class="st"> </span><span class="kw">colMeans</span>(X_count)</a>
+<a class="sourceLine" id="cb8-15" title="15">metricList<span class="op">$</span>ZIPFA<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_zipfa<span class="op">$</span>Ufit[[idx_max_like]], H0)</a>
+<a class="sourceLine" id="cb8-16" title="16">metricList<span class="op">$</span>ZIPFA<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_zipfa<span class="op">$</span>Vfit[[idx_max_like]], B0)</a>
+<a class="sourceLine" id="cb8-17" title="17">metricList<span class="op">$</span>PoissonPCA<span class="op">$</span>Time &lt;-<span class="st"> </span>time_zipfa</a></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Fourthly, we also applied the generalized factor model to estimate the loading matrix and factor matrix.</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">metricList<span class="op">$</span>GFM &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb9-2" title="2">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb9-3" title="3">fit_gfm &lt;-<span class="st"> </span><span class="kw">gfm</span>(<span class="kw">list</span>(X_count),  <span class="dt">type=</span><span class="st">&#39;poisson&#39;</span>, <span class="dt">q=</span> q, <span class="dt">verbose =</span> F)</a>
+<a class="sourceLine" id="cb9-4" title="4">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb9-5" title="5">time_gfm &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb9-6" title="6">metricList<span class="op">$</span>GFM<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_gfm<span class="op">$</span>hH, H0)</a>
+<a class="sourceLine" id="cb9-7" title="7">metricList<span class="op">$</span>GFM<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_gfm<span class="op">$</span>hB, B0)</a>
+<a class="sourceLine" id="cb9-8" title="8">metricList<span class="op">$</span>GFM<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(fit_gfm<span class="op">$</span>hmu<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb9-9" title="9">metricList<span class="op">$</span>GFM<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb9-10" title="10">metricList<span class="op">$</span>GFM<span class="op">$</span>Time &lt;-<span class="st"> </span>time_gfm</a></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Fifthly, we implemented PLNPCA:</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">PLNPCA_run &lt;-<span class="st"> </span><span class="cf">function</span>(X_count, covariates, q,  <span class="dt">Offset=</span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(X_count))){</a>
+<a class="sourceLine" id="cb10-2" title="2">  <span class="kw">require</span>(PLNmodels)</a>
+<a class="sourceLine" id="cb10-3" title="3"> </a>
+<a class="sourceLine" id="cb10-4" title="4">  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.character</span>(Offset)){</a>
+<a class="sourceLine" id="cb10-5" title="5">    dat_plnpca &lt;-<span class="st"> </span><span class="kw">prepare_data</span>(X_count, covariates)</a>
+<a class="sourceLine" id="cb10-6" title="6">    dat_plnpca<span class="op">$</span>Offset &lt;-<span class="st"> </span>Offset</a>
+<a class="sourceLine" id="cb10-7" title="7">  }<span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb10-8" title="8">    dat_plnpca &lt;-<span class="st"> </span><span class="kw">prepare_data</span>(X_count, covariates, <span class="dt">offset =</span> Offset)</a>
+<a class="sourceLine" id="cb10-9" title="9">  }</a>
+<a class="sourceLine" id="cb10-10" title="10">  </a>
+<a class="sourceLine" id="cb10-11" title="11">  d &lt;-<span class="st"> </span><span class="kw">ncol</span>(covariates)</a>
+<a class="sourceLine" id="cb10-12" title="12">  <span class="co">#  offset(log(Offset))+</span></a>
+<a class="sourceLine" id="cb10-13" title="13">  formu &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;Abundance ~ 1 + offset(log(Offset))+&quot;</span>,<span class="kw">paste</span>(<span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span>d), <span class="dt">collapse =</span> <span class="st">&#39;+&#39;</span>))</a>
+<a class="sourceLine" id="cb10-14" title="14">  </a>
+<a class="sourceLine" id="cb10-15" title="15">  </a>
+<a class="sourceLine" id="cb10-16" title="16">  myPCA &lt;-<span class="st"> </span><span class="kw">PLNPCA</span>(<span class="kw">as.formula</span>(formu), <span class="dt">data =</span> dat_plnpca, <span class="dt">ranks =</span> q)</a>
+<a class="sourceLine" id="cb10-17" title="17">  </a>
+<a class="sourceLine" id="cb10-18" title="18">  myPCA1 &lt;-<span class="st"> </span><span class="kw">getBestModel</span>(myPCA)</a>
+<a class="sourceLine" id="cb10-19" title="19">  myPCA1<span class="op">$</span>scores</a>
+<a class="sourceLine" id="cb10-20" title="20">  </a>
+<a class="sourceLine" id="cb10-21" title="21">  res_plnpca &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">PCs=</span> myPCA1<span class="op">$</span>scores, <span class="dt">bbeta=</span> myPCA1<span class="op">$</span>model_par<span class="op">$</span>B, </a>
+<a class="sourceLine" id="cb10-22" title="22">                     <span class="dt">loadings=</span>myPCA1<span class="op">$</span>model_par<span class="op">$</span>C)</a>
+<a class="sourceLine" id="cb10-23" title="23">  </a>
+<a class="sourceLine" id="cb10-24" title="24">  <span class="kw">return</span>(res_plnpca)</a>
+<a class="sourceLine" id="cb10-25" title="25">}</a>
+<a class="sourceLine" id="cb10-26" title="26"></a>
+<a class="sourceLine" id="cb10-27" title="27"></a>
+<a class="sourceLine" id="cb10-28" title="28"></a>
+<a class="sourceLine" id="cb10-29" title="29">  tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb10-30" title="30">  fit_plnpca &lt;-<span class="st"> </span><span class="kw">PLNPCA_run</span>(X_count,  <span class="dt">covariates =</span> Z[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">q=</span> q)</a>
+<a class="sourceLine" id="cb10-31" title="31">  toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb10-32" title="32">  time_plnpca &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb10-33" title="33"><span class="kw">message</span>(time_plnpca, <span class="st">&quot; seconds&quot;</span>)</a>
+<a class="sourceLine" id="cb10-34" title="34"></a>
+<a class="sourceLine" id="cb10-35" title="35">metricList<span class="op">$</span>PLNPCA<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_plnpca<span class="op">$</span>PCs, H0)</a>
+<a class="sourceLine" id="cb10-36" title="36">metricList<span class="op">$</span>PLNPCA<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit_plnpca<span class="op">$</span>loadings, B0)</a>
+<a class="sourceLine" id="cb10-37" title="37">metricList<span class="op">$</span>PLNPCA<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(fit_plnpca<span class="op">$</span>bbeta[,<span class="dv">1</span>]<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb10-38" title="38">metricList<span class="op">$</span>PLNPCA<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">as.vector</span>(fit_plnpca<span class="op">$</span>bbeta) <span class="op">-</span><span class="st"> </span><span class="kw">as.vector</span>(bbeta0)) </a>
+<a class="sourceLine" id="cb10-39" title="39">metricList<span class="op">$</span>PLNPCA<span class="op">$</span>Time &lt;-<span class="st"> </span>time_plnpca</a></code></pre></div>
+<ol start="6" style="list-style-type: decimal">
+<li>Sixthly, we implement the generalized linear latent variable models (GLLVM, Hui et al. 2017).</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## GLLVM runs very slowly, so we do not run it here.</span></a>
+<a class="sourceLine" id="cb11-2" title="2"></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="kw">library</span>(gllvm)</a>
+<a class="sourceLine" id="cb11-4" title="4"><span class="kw">colnames</span>(Z) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="st"> </span><span class="kw">ncol</span>(Z)))</a>
+<a class="sourceLine" id="cb11-5" title="5">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb11-6" title="6">fit &lt;-<span class="st"> </span><span class="kw">gllvm</span>(<span class="dt">y=</span>X_count, <span class="dt">X=</span>Z, <span class="dt">family=</span><span class="kw">poisson</span>(), <span class="dt">num.lv=</span> q, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">trace=</span>T))</a>
+<a class="sourceLine" id="cb11-7" title="7">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb11-8" title="8">time_gllvm &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb11-9" title="9"></a>
+<a class="sourceLine" id="cb11-10" title="10">metricList<span class="op">$</span>GLLVM &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb11-11" title="11">metricList<span class="op">$</span>GLLVM<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit<span class="op">$</span>lvs, H0)</a>
+<a class="sourceLine" id="cb11-12" title="12">metricList<span class="op">$</span>GLLVM<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(fit<span class="op">$</span>params<span class="op">$</span>theta, B0)</a>
+<a class="sourceLine" id="cb11-13" title="13">metricList<span class="op">$</span>GLLVM<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(fit<span class="op">$</span>params<span class="op">$</span>beta0<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb11-14" title="14">metricList<span class="op">$</span>GLLVM<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">as.vector</span>(<span class="kw">cbind</span>(fit<span class="op">$</span>params<span class="op">$</span>beta0,fit<span class="op">$</span>params<span class="op">$</span>Xcoef)) <span class="op">-</span><span class="st"> </span><span class="kw">as.vector</span>(bbeta0)) </a>
+<a class="sourceLine" id="cb11-15" title="15">metricList<span class="op">$</span>GLLVM<span class="op">$</span>Time &lt;-<span class="st"> </span>time_gllvm</a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="er">}</span></a></code></pre></div>
+<ol start="7" style="list-style-type: decimal">
+<li>Seventhly, Poisson regression model for each variable was implemented.</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">PoisReg &lt;-<span class="st"> </span><span class="cf">function</span>(X_count, covariates){</a>
+<a class="sourceLine" id="cb12-2" title="2">     <span class="kw">library</span>(stats)</a>
+<a class="sourceLine" id="cb12-3" title="3">     hbbeta &lt;-<span class="st"> </span><span class="kw">apply</span>(X_count, <span class="dv">2</span>, <span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb12-4" title="4">       glm1 &lt;-<span class="st"> </span><span class="kw">glm</span>(x<span class="op">~</span>covariates<span class="op">+</span><span class="dv">0</span>, <span class="dt">family =</span> <span class="st">&quot;poisson&quot;</span>)</a>
+<a class="sourceLine" id="cb12-5" title="5">       <span class="kw">coef</span>(glm1)</a>
+<a class="sourceLine" id="cb12-6" title="6">     } )</a>
+<a class="sourceLine" id="cb12-7" title="7">     <span class="kw">return</span>(<span class="kw">t</span>(hbbeta))</a>
+<a class="sourceLine" id="cb12-8" title="8">}</a>
+<a class="sourceLine" id="cb12-9" title="9">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb12-10" title="10">hbbeta_poisreg &lt;-<span class="st"> </span><span class="kw">PoisReg</span>(X_count, Z)</a>
+<a class="sourceLine" id="cb12-11" title="11">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb12-12" title="12">time_poisreg &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb12-13" title="13">metricList<span class="op">$</span>GLM &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb12-14" title="14">metricList<span class="op">$</span>GLM<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb12-15" title="15">metricList<span class="op">$</span>GLM<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb12-16" title="16">metricList<span class="op">$</span>GLM<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(hbbeta_poisreg[,<span class="dv">1</span>]<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb12-17" title="17">metricList<span class="op">$</span>GLM<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">as.vector</span>(hbbeta_poisreg) <span class="op">-</span><span class="st"> </span><span class="kw">as.vector</span>(bbeta0)) </a>
+<a class="sourceLine" id="cb12-18" title="18">metricList<span class="op">$</span>GLM<span class="op">$</span>Time &lt;-<span class="st"> </span>time_poisreg</a></code></pre></div>
+<ol start="8" style="list-style-type: decimal">
+<li>Eightly, we implemented the first version of multi-response reduced-rank Poisson regression model (MMMR, Luo et al. 2018) implemented in rrpack R package (MRRR-Z), that did not consider the latent factor structure but only the covariates.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mrrr_run &lt;-<span class="st"> </span><span class="cf">function</span>(Y, X, rank0, <span class="dt">q=</span><span class="ot">NULL</span>, <span class="dt">family=</span><span class="kw">list</span>(<span class="kw">poisson</span>()), <span class="dt">familygroup=</span><span class="kw">rep</span>(<span class="dv">1</span>,<span class="kw">ncol</span>(Y))){</a>
+<a class="sourceLine" id="cb13-2" title="2">  </a>
+<a class="sourceLine" id="cb13-3" title="3">  </a>
+<a class="sourceLine" id="cb13-4" title="4">  <span class="kw">require</span>(rrpack)</a>
+<a class="sourceLine" id="cb13-5" title="5">  </a>
+<a class="sourceLine" id="cb13-6" title="6">  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(Y); p &lt;-<span class="st"> </span><span class="kw">ncol</span>(Y)</a>
+<a class="sourceLine" id="cb13-7" title="7">  </a>
+<a class="sourceLine" id="cb13-8" title="8">  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(q)){</a>
+<a class="sourceLine" id="cb13-9" title="9">    rank0 &lt;-<span class="st"> </span>rank0<span class="op">+</span>q</a>
+<a class="sourceLine" id="cb13-10" title="10">    X &lt;-<span class="st"> </span><span class="kw">cbind</span>(X, <span class="kw">diag</span>(n))</a>
+<a class="sourceLine" id="cb13-11" title="11">  }</a>
+<a class="sourceLine" id="cb13-12" title="12">  </a>
+<a class="sourceLine" id="cb13-13" title="13">  svdX0d1 &lt;-<span class="st"> </span><span class="kw">svd</span>(X)<span class="op">$</span>d[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb13-14" title="14">  init1 =<span class="st"> </span><span class="kw">list</span>(<span class="dt">kappaC0 =</span> svdX0d1 <span class="op">*</span><span class="st"> </span><span class="dv">5</span>) <span class="co">## this setting follows the example that authors provided.</span></a>
+<a class="sourceLine" id="cb13-15" title="15">  </a>
+<a class="sourceLine" id="cb13-16" title="16">  fit.mrrr &lt;-<span class="st"> </span><span class="kw">mrrr</span>(<span class="dt">Y=</span>Y, <span class="dt">X=</span>X[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">family =</span> family, <span class="dt">familygroup =</span> familygroup,</a>
+<a class="sourceLine" id="cb13-17" title="17">                   <span class="dt">penstr =</span> <span class="kw">list</span>(<span class="dt">penaltySVD =</span> <span class="st">&quot;rankCon&quot;</span>, <span class="dt">lambdaSVD =</span> <span class="fl">0.1</span>),</a>
+<a class="sourceLine" id="cb13-18" title="18">                   <span class="dt">init =</span> init1, <span class="dt">maxrank =</span> rank0)</a>
+<a class="sourceLine" id="cb13-19" title="19">  hbbeta_mrrr &lt;-<span class="kw">t</span>(fit.mrrr<span class="op">$</span>coef[<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(Z), ])</a>
+<a class="sourceLine" id="cb13-20" title="20">  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(q)){</a>
+<a class="sourceLine" id="cb13-21" title="21">    Theta_hb &lt;-<span class="st"> </span>(fit.mrrr<span class="op">$</span>coef[(<span class="kw">ncol</span>(Z)<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span><span class="st"> </span>(<span class="kw">nrow</span>(Z)<span class="op">+</span><span class="kw">ncol</span>(Z)), ])</a>
+<a class="sourceLine" id="cb13-22" title="22">    svdTheta &lt;-<span class="st"> </span><span class="kw">svd</span>(Theta_hb, <span class="dt">nu=</span>q, <span class="dt">nv=</span>q)</a>
+<a class="sourceLine" id="cb13-23" title="23">    <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">hbbeta=</span>hbbeta_mrrr, <span class="dt">factor=</span>svdTheta<span class="op">$</span>u, <span class="dt">loading=</span>svdTheta<span class="op">$</span>v))</a>
+<a class="sourceLine" id="cb13-24" title="24">  }<span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb13-25" title="25">    <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">hbbeta=</span>hbbeta_mrrr))</a>
+<a class="sourceLine" id="cb13-26" title="26">  }</a>
+<a class="sourceLine" id="cb13-27" title="27">  </a>
+<a class="sourceLine" id="cb13-28" title="28">  </a>
+<a class="sourceLine" id="cb13-29" title="29">}</a>
+<a class="sourceLine" id="cb13-30" title="30">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb13-31" title="31"></a>
+<a class="sourceLine" id="cb13-32" title="32">res_mrrrz &lt;-<span class="st"> </span><span class="kw">mrrr_run</span>(X_count, Z, rank0)</a>
+<a class="sourceLine" id="cb13-33" title="33">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb13-34" title="34">time_mrrrz &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb13-35" title="35"></a>
+<a class="sourceLine" id="cb13-36" title="36">metricList<span class="op">$</span>MRRR_Z &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb13-37" title="37">metricList<span class="op">$</span>MRRR_Z<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb13-38" title="38">metricList<span class="op">$</span>MRRR_Z<span class="op">$</span>Tr_B &lt;-<span class="ot">NA</span></a>
+<a class="sourceLine" id="cb13-39" title="39">metricList<span class="op">$</span>MRRR_Z<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(res_mrrrz<span class="op">$</span>hbbeta[,<span class="dv">1</span>]<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb13-40" title="40">metricList<span class="op">$</span>MRRR_Z<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">as.vector</span>(res_mrrrz<span class="op">$</span>hbbeta) <span class="op">-</span><span class="st"> </span><span class="kw">as.vector</span>(bbeta0)) </a>
+<a class="sourceLine" id="cb13-41" title="41">metricList<span class="op">$</span>MRRR_Z<span class="op">$</span>Time &lt;-<span class="st"> </span>time_mrrrz</a></code></pre></div>
+<ol start="9" style="list-style-type: decimal">
+<li>Lastly, we implemented the second version of MRRR (MRRR-F) that considered both covariates and the latent factor structure.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">tic &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb14-2" title="2">res_mrrrf &lt;-<span class="st"> </span><span class="kw">mrrr_run</span>(X_count, Z, rank0, <span class="dt">q=</span>q)</a>
+<a class="sourceLine" id="cb14-3" title="3">toc &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</a>
+<a class="sourceLine" id="cb14-4" title="4">time_mrrrf &lt;-<span class="st"> </span>toc[<span class="dv">3</span>] <span class="op">-</span><span class="st"> </span>tic[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb14-5" title="5">metricList<span class="op">$</span>MRRR_F &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb14-6" title="6">metricList<span class="op">$</span>MRRR_F<span class="op">$</span>Tr_H &lt;-<span class="st"> </span><span class="kw">measurefun</span>(res_mrrrf<span class="op">$</span>factor, H0)</a>
+<a class="sourceLine" id="cb14-7" title="7">metricList<span class="op">$</span>MRRR_F<span class="op">$</span>Tr_B &lt;-<span class="st"> </span><span class="kw">measurefun</span>(res_mrrrf<span class="op">$</span>loading, B0)</a>
+<a class="sourceLine" id="cb14-8" title="8">metricList<span class="op">$</span>MRRR_F<span class="op">$</span>err_bb1 &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(res_mrrrf<span class="op">$</span>hbbeta[,<span class="dv">1</span>]<span class="op">-</span><span class="st"> </span>bbeta0[,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb14-9" title="9">metricList<span class="op">$</span>MRRR_F<span class="op">$</span>err_bb &lt;-<span class="st"> </span><span class="kw">norm_vec</span>(<span class="kw">as.vector</span>(res_mrrrf<span class="op">$</span>hbbeta) <span class="op">-</span><span class="st"> </span><span class="kw">as.vector</span>(bbeta0)) </a>
+<a class="sourceLine" id="cb14-10" title="10">metricList<span class="op">$</span>MRRR_F<span class="op">$</span>Time &lt;-<span class="st"> </span>time_mrrrf</a></code></pre></div>
+</div>
+<div id="visualize-the-comparison-of-performance" class="section level2">
+<h2>Visualize the comparison of performance</h2>
+<p>Next, we summarized the metrics for COAP and other compared methods in a dataframe object.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">list2vec &lt;-<span class="st"> </span><span class="cf">function</span>(xlist){</a>
+<a class="sourceLine" id="cb15-2" title="2">  nn &lt;-<span class="st"> </span><span class="kw">length</span>(xlist)</a>
+<a class="sourceLine" id="cb15-3" title="3">  me &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, nn)</a>
+<a class="sourceLine" id="cb15-4" title="4">  idx_noNA &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">sapply</span>(xlist, <span class="cf">function</span>(x) <span class="op">!</span><span class="kw">is.null</span>(x)))</a>
+<a class="sourceLine" id="cb15-5" title="5">  <span class="cf">for</span>(r <span class="cf">in</span> idx_noNA) me[r] &lt;-<span class="st"> </span>xlist[[r]]</a>
+<a class="sourceLine" id="cb15-6" title="6">  <span class="kw">return</span>(me)</a>
+<a class="sourceLine" id="cb15-7" title="7">}</a>
+<a class="sourceLine" id="cb15-8" title="8"></a>
+<a class="sourceLine" id="cb15-9" title="9">dat_metric &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Tr_H =</span> <span class="kw">sapply</span>(metricList, <span class="cf">function</span>(x) x<span class="op">$</span>Tr_H), </a>
+<a class="sourceLine" id="cb15-10" title="10">                         <span class="dt">Tr_B =</span> <span class="kw">sapply</span>(metricList, <span class="cf">function</span>(x) x<span class="op">$</span>Tr_B),</a>
+<a class="sourceLine" id="cb15-11" title="11">                         <span class="dt">err_bb1 =</span><span class="kw">sapply</span>(metricList, <span class="cf">function</span>(x) x<span class="op">$</span>err_bb1),</a>
+<a class="sourceLine" id="cb15-12" title="12">                         <span class="dt">err_bb =</span> <span class="kw">list2vec</span>(<span class="kw">lapply</span>(metricList, <span class="cf">function</span>(x) x[[<span class="st">&#39;err_bb&#39;</span>]])),</a>
+<a class="sourceLine" id="cb15-13" title="13">                         <span class="dt">Method =</span> <span class="kw">names</span>(metricList))</a>
+<a class="sourceLine" id="cb15-14" title="14">dat_metric</a></code></pre></div>
+<p>Plot the results for COAP and other methods, which suggests that COAP achieves better estimation accuracy for the quantiites of interest.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">library</span>(cowplot)</a>
+<a class="sourceLine" id="cb16-2" title="2">p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(dat_metric, <span class="op">!</span><span class="kw">is.na</span>(Tr_B)), <span class="kw">aes</span>(<span class="dt">x=</span> Method, <span class="dt">y=</span>Tr_B, <span class="dt">fill=</span>Method)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks=</span><span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3">p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(dat_metric, <span class="op">!</span><span class="kw">is.na</span>(Tr_H)), <span class="kw">aes</span>(<span class="dt">x=</span> Method, <span class="dt">y=</span>Tr_H, <span class="dt">fill=</span>Method)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks=</span><span class="ot">NULL</span>)<span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4">p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(dat_metric, <span class="op">!</span><span class="kw">is.na</span>(err_bb1)), <span class="kw">aes</span>(<span class="dt">x=</span> Method, <span class="dt">y=</span>err_bb1, <span class="dt">fill=</span>Method)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks=</span><span class="ot">NULL</span>)<span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb16-5" title="5">p4 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(dat_metric, <span class="op">!</span><span class="kw">is.na</span>(err_bb)), <span class="kw">aes</span>(<span class="dt">x=</span> Method, <span class="dt">y=</span>err_bb, <span class="dt">fill=</span>Method)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks=</span><span class="ot">NULL</span>)<span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="kw">plot_grid</span>(p1,p2,p3, p4, <span class="dt">nrow=</span><span class="dv">2</span>, <span class="dt">ncol=</span><span class="dv">2</span>)</a></code></pre></div>
+</div>
+<div id="select-the-parameters" class="section level2">
+<h2>Select the parameters</h2>
+<p>We applied the singular value ratio based method to select the number of factors and the rank of coefficient matrix. The results showed that the SVR method has the potential to identify the true values.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">datList &lt;-<span class="st"> </span><span class="kw">gendata_simu</span>(<span class="dt">seed =</span> <span class="dv">1</span>, <span class="dt">n=</span>n, <span class="dt">p=</span>p, <span class="dt">d=</span> d, <span class="dt">rank0 =</span> rank0, <span class="dt">q=</span> q, <span class="dt">rho=</span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">6</span>),</a>
+<a class="sourceLine" id="cb17-2" title="2">                        <span class="dt">sigma2_eps =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb17-3" title="3">X_count &lt;-<span class="st"> </span>datList<span class="op">$</span>X; Z &lt;-<span class="st"> </span>datList<span class="op">$</span>Z</a>
+<a class="sourceLine" id="cb17-4" title="4">res1 &lt;-<span class="st"> </span><span class="kw">selectParams</span>(<span class="dt">X_count=</span>datList<span class="op">$</span>X, <span class="dt">Z=</span>datList<span class="op">$</span>Z, <span class="dt">verbose=</span>F)</a>
+<a class="sourceLine" id="cb17-5" title="5"></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="kw">print</span>(<span class="kw">c</span>(<span class="dt">q_true=</span>q, <span class="dt">q_est=</span>res1[<span class="st">&#39;hq&#39;</span>]))</a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="kw">print</span>(<span class="kw">c</span>(<span class="dt">r_true=</span>rank0, <span class="dt">r_est=</span>res1[<span class="st">&#39;hr&#39;</span>]))</a></code></pre></div>
+<details>
+<p><summary><strong>Session Info</strong></summary></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">sessionInfo</span>()</a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="co">#&gt; R version 4.1.2 (2021-11-01)</span></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="co">#&gt; Running under: Windows 10 x64 (build 22621)</span></a>
+<a class="sourceLine" id="cb18-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb18-6" title="6"><span class="co">#&gt; Matrix products: default</span></a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb18-8" title="8"><span class="co">#&gt; locale:</span></a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="co">#&gt; [1] LC_COLLATE=C                              </span></a>
+<a class="sourceLine" id="cb18-10" title="10"><span class="co">#&gt; [2] LC_CTYPE=Chinese (Simplified)_China.936   </span></a>
+<a class="sourceLine" id="cb18-11" title="11"><span class="co">#&gt; [3] LC_MONETARY=Chinese (Simplified)_China.936</span></a>
+<a class="sourceLine" id="cb18-12" title="12"><span class="co">#&gt; [4] LC_NUMERIC=C                              </span></a>
+<a class="sourceLine" id="cb18-13" title="13"><span class="co">#&gt; [5] LC_TIME=Chinese (Simplified)_China.936    </span></a>
+<a class="sourceLine" id="cb18-14" title="14"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb18-15" title="15"><span class="co">#&gt; attached base packages:</span></a>
+<a class="sourceLine" id="cb18-16" title="16"><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></a>
+<a class="sourceLine" id="cb18-17" title="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb18-18" title="18"><span class="co">#&gt; loaded via a namespace (and not attached):</span></a>
+<a class="sourceLine" id="cb18-19" title="19"><span class="co">#&gt;  [1] digest_0.6.29   R6_2.5.1        jsonlite_1.8.0  magrittr_2.0.3 </span></a>
+<a class="sourceLine" id="cb18-20" title="20"><span class="co">#&gt;  [5] evaluate_0.15   stringi_1.7.6   rlang_1.1.0     cli_3.2.0      </span></a>
+<a class="sourceLine" id="cb18-21" title="21"><span class="co">#&gt;  [9] rstudioapi_0.13 jquerylib_0.1.4 bslib_0.3.1     rmarkdown_2.11 </span></a>
+<a class="sourceLine" id="cb18-22" title="22"><span class="co">#&gt; [13] tools_4.1.2     stringr_1.4.0   xfun_0.29       yaml_2.3.6     </span></a>
+<a class="sourceLine" id="cb18-23" title="23"><span class="co">#&gt; [17] fastmap_1.1.0   compiler_4.1.2  htmltools_0.5.2 knitr_1.37     </span></a>
+<a class="sourceLine" id="cb18-24" title="24"><span class="co">#&gt; [21] sass_0.4.1</span></a></code></pre></div>
+</details>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
