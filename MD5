@@ -1,13 +1,14 @@
-d88faf090c730d27755bb9d0ca191150 *DESCRIPTION
+901d986ccdf9777709e38627fc8ff5f1 *DESCRIPTION
 dee6d4a8173903900a3f2d7bca3b2c8a *NAMESPACE
 5286547e587ad4f6ec315fafd4a3528c *R/RcppExports.R
 f61c203fa5481303e94733f0550f43ab *R/main.R
 21561af40bae6b00af77ac3593f79c85 *R/test.R
-5f0f845575e4a30a33984cd0afd9bd0e *README.md
+0b42bc0248c2cc481ae3e0fcb27d3d05 *R/zzz.R
+8e2f38264334f7e81c485ca839e96ec2 *README.md
 94f3f9fb741274c32cc845d72560fce6 *build/vignette.rds
 5432389e4a1c52e0e9c6736e79db94be *inst/doc/COAPsimu.R
 d333b9a21f4c505417a17817d951e32a *inst/doc/COAPsimu.Rmd
-1ae56d5b88d421b3b9ccdc9e651aafbd *inst/doc/COAPsimu.html
+8681f461030ae0abfff0425ba37b3dc0 *inst/doc/COAPsimu.html
 98c466df75670f23abf92585b8375de6 *man/RR_COAP.Rd
 008db1686065d789aa7ae9774995ff86 *man/gendata_simu.Rd
 e156fbabbbc8d3d1aa52929c073848c0 *man/selectParams.Rd
