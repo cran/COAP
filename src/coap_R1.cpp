@@ -10,7 +10,7 @@
 #include<ctime>
 //#include<boost/math/tools/minima.hpp>
 
-#define INT_MIN (-INT_MAX - 1)
+
 
 using namespace Rcpp;
 using namespace arma;
@@ -195,7 +195,7 @@ Rcpp::List Reduced_Rank_COAP(const arma::mat& X_count, const arma::vec& a, const
   vec invLambda(invLambda_int);
   
   vec ELBO_vec(maxIter), bsb, Lambda;;
-  ELBO_vec(0) = INT_MIN;
+  ELBO_vec(0) = -1e15; //
   mat S_bar, dX, tY;
   int iter;
   

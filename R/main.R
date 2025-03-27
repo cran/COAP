@@ -1,6 +1,6 @@
 # generate man files
 # devtools::document()
-# R CMD check --as-cran COAP_1.1.tar.gz
+# R CMD check --as-cran COAP_1.3.tar.gz
 ## usethis::use_data(dat_r2_mac)
 # pkgdown::build_site()
 # pkgdown::build_home()

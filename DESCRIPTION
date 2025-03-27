@@ -2,8 +2,8 @@ Package: COAP
 Type: Package
 Title: High-Dimensional Covariate-Augmented Overdispersed Poisson
         Factor Model
-Version: 1.2
-Date: 2024-05-02
+Version: 1.3
+Date: 2025-03-27
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -28,6 +28,6 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 NeedsCompilation: yes
-Packaged: 2024-05-02 03:21:19 UTC; Liuxianju
+Packaged: 2025-03-27 09:49:55 UTC; Liuxianju
 Repository: CRAN
-Date/Publication: 2024-05-02 03:42:48 UTC
+Date/Publication: 2025-03-27 11:30:02 UTC
